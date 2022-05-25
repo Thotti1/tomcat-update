@@ -1,5 +1,5 @@
 ---
-- name: "Tomcat upgrading playbook"
+- name: "Tomcat upgrading playbook for Linux servers"
   hosts: all       # Inventory hosts group / server to act on
   become: yes      
   vars:
