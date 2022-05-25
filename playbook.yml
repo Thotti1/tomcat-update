@@ -1,0 +1,9 @@
+---
+- name: "Tomcat upgrading playbook"
+  hosts: all       # Inventory hosts group / server to act on
+  become: yes      
+  vars:
+    tomcat_ver: 8.5.78             # Tomcat version to update
+    time: (date +%Y-%m-%d_%H-%M-%S)
+  roles:
+    - role: stig
