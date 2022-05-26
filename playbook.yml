@@ -3,6 +3,10 @@
   hosts: localhost       # Inventory hosts group / server to act on
   become: yes      
   vars:
-    tomcat_ver: 8.5.78             # Tomcat version to update
+    tomcat_ver: 8.5.78   # Tomcat version to update
+    tar_dest: /opt/
+    #destination: /opt/app/alfresco/tomcat/ 
+    log_src: /opt/tomcat/logs
+    log_dest: /opt/tomcat/logs.old
   roles:
     - role: tomcat-role

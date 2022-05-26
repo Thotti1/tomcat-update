@@ -1,4 +1,4 @@
-#- name: stop alfresco service
+# - name: stop alfresco service
 #  systemd:
 #    name: alfresco
 #    state: stop
@@ -6,31 +6,85 @@
 - name: download tomcat apache package
   get_url:
     url: https://dlcdn.apache.org/tomcat/tomcat-8/v{{ tomcat_ver }}/bin/apache-tomcat-{{ tomcat_ver }}.tar.gz
-    dest: /opt/tomcat/
+    dest: /opt/tomcat/ #update to vars for destination
 #    checksum: sha512:ae059a595ba11386bf3c0a80e961c5f8bb057b2bab987c3863337311e95d4fa22f1185a44b2c8856dd33f7cfe76d4de4e2fe1bc8b89c6abfbfc008656c49b8c0
 
 - name: unarchive
   ansible.builtin.unarchive:
     src: /opt/tomcat/apache-tomcat-{{ tomcat_ver }}.tar.gz
-    dest: /opt/tomcat/
+    dest: /opt/
 
-- name: create a directory to take backup
-  file:
-    path: /opt/tomcat/tomcat-backup
-    state: directory
+# - name: create a directory to take backup
+#   file:
+#     path: /opt/tomcat-backup
+#     state: directory
 
 - name: taking backup
   copy:
-    src: /opt/tomcat/
-    dest: /opt/tomcat/tomcat-backup/
+    src: /opt/tomcat/{{ item }}
+    dest: /opt/tomcat-backup/
     remote_src: yes
     directory_mode: yes
+  with_list:
+    - lib
+    - bin
+    - conf
+    - BUILDING.txt
+    - CONTRIBUTING.md
+    - LICENSE
+    - NOTICE
+    - README.md
+    - RELEASE-NOTES
+    - RUNNING.txt
 
 - name: updating files with new version
   copy:
-    src: /opt/tomcat/apache-tomcat-{{ tomcat_ver }}/
+    src: /opt/apache-tomcat-{{ tomcat_ver }}/{{ item }} # specific files need to copy # this is done
     dest: /opt/tomcat/
     remote_src: yes
+  with_list:
+    - lib
+    - bin
+    - BUILDING.txt
+    - CONTRIBUTING.md
+    - LICENSE
+    - NOTICE
+    - README.md
+    - RELEASE-NOTES
+    - RUNNING.txt
+
+- name: gathering files to delete
+  find:
+    paths: /opt/tomcat/temp/
+    patterns: "*"
+  register: files_to_delete
+
+- name: remove temp dir contents
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ files_to_delete.files }}"
+
+- name: remove temp dir contents
+  file:
+    path: /{{ item }} # find out a way to remove files from temp #this done
+    state: absent
+  with_list:
+     - /opt/tomcat/temp/*
+
+- name: remove work dir contents
+  file:
+    path: /{{ item }}
+    state: absent
+  with_fileglob:
+      - /opt/tomcat/work/*
+
+- name: create a directory to take logs backup
+  copy:
+    src: /opt/tomcat/logs/
+    dest: /opt/tomcat/logs.old/  #use variables for src and dest
+    remote_src: yes
+    directory_mode: yes
 
 - name: changing ownership for the dir tomcat
   file:
@@ -41,24 +95,7 @@
     group: tomcat
     mode: '0740'
 
-- name: removing temp files
-  file:
-    path: /opt/tomcat/temp/safeToDelete.tmp
-    state: absent
-
-#- name: removing files from work directory
-#  file:
-#    path: /opt/tomcat/work/
-#    state: absent
-
-- name: create a directory to take logs backup
-  copy:
-    src: /opt/tomcat/logs/
-    dest: /opt/tomcat/logs.old/
-    remote_src: yes
-    directory_mode: ye
-
-#   command: mv -vf tomcat/logs/* tomcat/logs.old/
+    # previous permission owner roolback permission
 
 #- name: starting alfresco service
 #  systemd:
