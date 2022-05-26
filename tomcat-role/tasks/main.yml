@@ -1,55 +1,66 @@
-- name: stop alfresco service
-  systemd:
-    name: alfresco
-    state: stop
+#- name: stop alfresco service
+#  systemd:
+#    name: alfresco
+#    state: stop
 
 - name: download tomcat apache package
   get_url:
     url: https://dlcdn.apache.org/tomcat/tomcat-8/v{{ tomcat_ver }}/bin/apache-tomcat-{{ tomcat_ver }}.tar.gz
-    dest: /opt/app/alfresco/
+    dest: /opt/tomcat/
+#    checksum: sha512:ae059a595ba11386bf3c0a80e961c5f8bb057b2bab987c3863337311e95d4fa22f1185a44b2c8856dd33f7cfe76d4de4e2fe1bc8b89c6abfbfc008656c49b8c0
 
--name: change directory
- command:
-    - cd /opt/app/alfresco/
-    - sha512sum apache-tomcat-{{ tomcat_ver }}.tar.gz
-    - tar zxf apache-tomcat-{{ tomcat_ver }}.tar.gz
+- name: unarchive
+  ansible.builtin.unarchive:
+    src: /opt/tomcat/apache-tomcat-{{ tomcat_ver }}.tar.gz
+    dest: /opt/tomcat/
 
-- name: Create directory to take backup
+- name: create a directory to take backup
   file:
-    path: /opt/app/alfresco/tomcat-backup{{ time }}
+    path: /opt/tomcat/tomcat-backup
     state: directory
 
 - name: taking backup
   copy:
-    src: /opt/app/alfresco/tomcat/
-    dest: tomcat-backup{{ time }}/
+    src: /opt/tomcat/
+    dest: /opt/tomcat/tomcat-backup/
+    remote_src: yes
+    directory_mode: yes
 
-- name: backup
-  command: cp -vpr tomcat/{lib,bin,conf,BUILDING.txt,CONTRIBUTING.md,LICENSE,NOTICE,README.md,RELEASE-NOTES,RUNNING.txt} tomcat-backup{{ time }}/
-
-- name: taking backup
+- name: updating files with new version
   copy:
-    src: /opt/app/alfresco/apache-tomcat-{{ tomcat_ver }}/
-    dest: /opt/app/alfresco/tomcat/
+    src: /opt/tomcat/apache-tomcat-{{ tomcat_ver }}/
+    dest: /opt/tomcat/
+    remote_src: yes
 
-- name: copying files to tomcat
-  command: \cp -vprf apache-tomcat-{{ tomcat_ver }}/{lib,bin,BUILDING.txt,CONTRIBUTING.md,LICENSE,NOTICE,README.md,RELEASE-NOTES,RUNNING.txt} tomcat/
-
-- name: changing permissions
-  command : chown -R alfresco:alfresco  tomcat/{lib,bin,BUILDING.txt,CONTRIBUTING.md,LICENSE,NOTICE,README.md,RELEASE-NOTES,RUNNING.txt}
-
-- name: removing files
-  command: rm -rf tomcat/{temp,work}/*
-
-- name: Create directory for log backup
+- name: changing ownership for the dir tomcat
   file:
-    path: /opt/app/alfresco/logs.old
+    path: /opt/tomcat/
     state: directory
+    recurse: yes
+    owner: tomcat
+    group: tomcat
+    mode: '0740'
 
-- name: moving logs to backup folder
-  command: mv -vf tomcat/logs/* tomcat/logs.old/
+- name: removing temp files
+  file:
+    path: /opt/tomcat/temp/safeToDelete.tmp
+    state: absent
 
-- name: Start alfresco service
-  systemd:
-     name: alfresco
-     state: started
+#- name: removing files from work directory
+#  file:
+#    path: /opt/tomcat/work/
+#    state: absent
+
+- name: create a directory to take logs backup
+  copy:
+    src: /opt/tomcat/logs/
+    dest: /opt/tomcat/logs.old/
+    remote_src: yes
+    directory_mode: ye
+
+#   command: mv -vf tomcat/logs/* tomcat/logs.old/
+
+#- name: starting alfresco service
+#  systemd:
+#    name: alfresco
+#    state: started
