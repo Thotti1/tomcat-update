@@ -10,7 +10,7 @@
 #    checksum: sha512:ae059a595ba11386bf3c0a80e961c5f8bb057b2bab987c3863337311e95d4fa22f1185a44b2c8856dd33f7cfe76d4de4e2fe1bc8b89c6abfbfc008656c49b8c0
 
 - name: unarchive
-  ansible.builtin.unarchive:
+  unarchive:
     src: /{{ archive_src }}
     dest: /{{ archive_dest }}
 
@@ -61,7 +61,7 @@
   with_items: "{{ temp_files_to_delete.files }}"
 
 - name: Recursively remove directory
-  ansible.builtin.file:
+  file:
     path: /opt/tomcat/work/Catalina
     state: absent  
 
@@ -100,9 +100,7 @@
     owner: tomcat
     group: tomcat
     mode: '0740'
-
-    # previous permission owner roolback permission
-
+    
 #- name: starting alfresco service
 #  systemd:
 #    name: alfresco
