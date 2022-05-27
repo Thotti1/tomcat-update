@@ -44,8 +44,6 @@
     - CONTRIBUTING.md
     - LICENSE
     - NOTICE
-    - temp
-#    - work
     - README.md
     - RELEASE-NOTES
     - RUNNING.txt
@@ -79,13 +77,6 @@
 #     path: "{{ item.path }}"
 #     state: absent
 #   with_items: "{{ work_files_to_delete.files }}"
-
-# - name: remove temp dir contents
-#   file:
-#     path: /{{ item }} # find out a way to remove files from temp
-#     state: absent
-#   with_list:
-#      - /opt/tomcat/temp/*
 
 # - name: remove work dir contents
 #   file:
