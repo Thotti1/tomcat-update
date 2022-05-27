@@ -63,6 +63,7 @@
 - name: gathering work files to delete
   find:
     paths: /opt/tomcat/work/
+    recurse: yes
     patterns: "*"
   register: work_files_to_delete
 
