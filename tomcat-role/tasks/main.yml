@@ -1,7 +1,7 @@
-# - name: stop alfresco service
-#  systemd:
-#    name: alfresco
-#    state: stop
+ - name: stop alfresco service
+  systemd:
+    name: alfresco
+   state: stop
 
 - name: download tomcat apache package
   get_url:
@@ -82,7 +82,7 @@
     group: tomcat
     mode: '0740'
 
-#- name: starting alfresco service
-#  systemd:
-#    name: alfresco
-#    state: started
+- name: starting alfresco service
+  systemd:
+    name: alfresco
+    state: started
