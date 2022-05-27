@@ -66,6 +66,7 @@
   ansible.builtin.file:
     path: /opt/work/Catalina
     state: absent  
+    recurse: yes
 
 # - name: gathering work files to delete
 #   find:
