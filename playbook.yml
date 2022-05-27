@@ -1,6 +1,6 @@
 ---
 - name: "Tomcat upgrading playbook for Linux servers"
-  hosts: localhost       # Inventory hosts group / server to act on
+  hosts: all       # Inventory hosts group / server to act on
   become: yes      
   vars:
     tomcat_ver: 8.5.78   # Tomcat version to update
