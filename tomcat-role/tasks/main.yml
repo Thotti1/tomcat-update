@@ -6,23 +6,18 @@
 - name: download tomcat apache package
   get_url:
     url: https://dlcdn.apache.org/tomcat/tomcat-8/v{{ tomcat_ver }}/bin/apache-tomcat-{{ tomcat_ver }}.tar.gz
-    dest: /opt/tomcat/ #update to vars for destination
+    dest: /{{ tar_dest }} #update to vars for destination
 #    checksum: sha512:ae059a595ba11386bf3c0a80e961c5f8bb057b2bab987c3863337311e95d4fa22f1185a44b2c8856dd33f7cfe76d4de4e2fe1bc8b89c6abfbfc008656c49b8c0
 
 - name: unarchive
   ansible.builtin.unarchive:
-    src: /opt/tomcat/apache-tomcat-{{ tomcat_ver }}.tar.gz
-    dest: /opt/
+    src: /{{ archive_src }}
+    dest: /{{ archive_dest }}
 
-# - name: create a directory to take backup
-#   file:
-#     path: /opt/tomcat-backup
-#     state: directory
-
-- name: taking backup
+- name: copy current version files for backup
   copy:
-    src: /opt/tomcat/{{ item }}
-    dest: /opt/tomcat-backup/
+    src: /{{backup_src}}{{ item }}
+    dest: /{{ backup_dest }}
     remote_src: yes
     directory_mode: yes
   with_list:
@@ -39,8 +34,8 @@
 
 - name: updating files with new version
   copy:
-    src: /opt/apache-tomcat-{{ tomcat_ver }}/{{ item }} # specific files need to copy # this is done
-    dest: /opt/tomcat/
+    src: /{{ copy_src }}/{{ item }} # specific files need to copy # this is done
+    dest: /{{ copy_dest }}
     remote_src: yes
   with_list:
     - lib
@@ -67,7 +62,7 @@
 
 - name: remove temp dir contents
   file:
-    path: /{{ item }} # find out a way to remove files from temp #this done
+    path: /{{ item }} # find out a way to remove files from temp
     state: absent
   with_list:
      - /opt/tomcat/temp/*
@@ -81,8 +76,8 @@
 
 - name: create a directory to take logs backup
   copy:
-    src: /opt/tomcat/logs/
-    dest: /opt/tomcat/logs.old/  #use variables for src and dest
+    src: /{{ log_src }}
+    dest: /{{ log_dest }}  #use variables for src and dest
     remote_src: yes
     directory_mode: yes
 
