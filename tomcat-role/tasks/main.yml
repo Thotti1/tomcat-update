@@ -44,6 +44,7 @@
     - CONTRIBUTING.md
     - LICENSE
     - NOTICE
+    - temp
     - README.md
     - RELEASE-NOTES
     - RUNNING.txt
@@ -60,18 +61,18 @@
     state: absent
   with_items: "{{ temp_files_to_delete.files }}"
 
-- name: gathering work files to delete
-  find:
-    paths: /opt/tomcat/work/
-    recurse: yes
-    patterns: "*Catalina*"
-  register: work_files_to_delete
+# - name: gathering work files to delete
+#   find:
+#     paths: /opt/tomcat/work/
+#     recurse: yes
+#     patterns: "*Catalina*"
+#   register: work_files_to_delete
 
-- name: remove work dir contents
-  file:
-    path: "{{ item.path }}"
-    state: absent
-  with_items: "{{ work_files_to_delete.files }}"
+# - name: remove work dir contents
+#   file:
+#     path: "{{ item.path }}"
+#     state: absent
+#   with_items: "{{ work_files_to_delete.files }}"
 
 # - name: remove temp dir contents
 #   file:
