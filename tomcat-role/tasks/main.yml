@@ -7,7 +7,7 @@
   get_url:
     url: https://dlcdn.apache.org/tomcat/tomcat-8/v{{ tomcat_ver }}/bin/apache-tomcat-{{ tomcat_ver }}.tar.gz
     dest: /{{ tar_dest }} #update to vars for destination
-#    checksum: sha512:ae059a595ba11386bf3c0a80e961c5f8bb057b2bab987c3863337311e95d4fa22f1185a44b2c8856dd33f7cfe76d4de4e2fe1bc8b89c6abfbfc008656c49b8c0
+    checksum: sha512:{{checksum-value}}
 
 - name: unarchive
   unarchive:

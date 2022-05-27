@@ -4,9 +4,11 @@
   become: yes      
   vars:
     tomcat_ver: 8.5.78   # Tomcat version to update
-    # archive/tar file path variables
+    # sha512 value(example file apache-tomcat-8.5.78.tar.gz.sha512 this file content is below value)
+    value: b50213e64cc1fd3da2847deda1ca13bee4c26663093c11d53c5ecfe4cdec8856e743b4a1d8488e0c0cbe9bf149e755df40a4140f3b155e2195e3bc6335de3512
     base_dir: /opt/app/alfresco/
     tomcat_dir: tomcat
+    # archive/tar file path variables
     tar_dest: /{{ base_dir }}
     archive_src: /{{ base_dir }}/apache-tomcat-{{ tomcat_ver }}.tar.gz
     archive_dest: /{{ base_dir }}
