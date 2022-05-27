@@ -4,14 +4,17 @@
   become: yes      
   vars:
     tomcat_ver: 8.5.78   # Tomcat version to update
+    # archive/tar file path variables
     tar_dest: /opt/app/alfresco/
     archive_src: /opt/app/alfresco/apache-tomcat-{{ tomcat_ver }}.tar.gz
     archive_dest: /opt/app/alfresco/
+    # backup path for current version
     backup_src: /opt/app/alfresco/tomcat/
     backup_dest: /opt/app/alfresco/tomcat-backup/
-    # copy files from updated version to tomcat
+    # copy files from updated version to tomcat path vaiables
     copy_src: /opt/app/alfresco/apache-tomcat-{{ tomcat_ver }}/
     copy_dest: /opt/app/alfresco/tomcat/
+    # backup path for logs
     log_src: /opt/app/alfresco/tomcat/logs
     log_dest: /opt/app/alfresco/tomcat/logs.old
   roles:
