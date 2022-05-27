@@ -50,7 +50,7 @@
 
 - name: gathering files to delete
   file:
-    paths: /opt/tomcat/temp/
+    path: /opt/tomcat/temp/
     state: absent
 
 - name: remove temp dir contents
