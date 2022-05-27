@@ -64,7 +64,7 @@
   find:
     paths: /opt/tomcat/work/
     recurse: yes
-    patterns: "*"
+    patterns: "*Catalina*"
   register: work_files_to_delete
 
 - name: remove work dir contents
