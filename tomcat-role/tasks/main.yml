@@ -49,9 +49,16 @@
     - RUNNING.txt
 
 - name: gathering files to delete
+  find:
+    paths: /opt/tomcat/temp/
+    patterns: "*"
+  register: files_to_delete
+
+- name: remove temp dir contents
   file:
-    path: /opt/tomcat/temp/
+    path: "{{ item.path }}"
     state: absent
+  with_items: "{{ files_to_delete.files }}"
 
 - name: remove temp dir contents
   file:
