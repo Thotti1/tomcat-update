@@ -49,17 +49,22 @@
     - RELEASE-NOTES
     - RUNNING.txt
 
-# - name: gathering temp files to delete
-#   find:
-#     paths: /opt/tomcat/temp/
-#     patterns: "*"
-#   register: temp_files_to_delete
+- name: gathering temp files to delete
+  find:
+    paths: /opt/tomcat/temp/
+    patterns: "*"
+  register: temp_files_to_delete
 
-# - name: remove temp dir contents
-#   file:
-#     path: "{{ item.path }}"
-#     state: absent
-#   with_items: "{{ temp_files_to_delete.files }}"
+- name: remove temp dir contents
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ temp_files_to_delete.files }}"
+
+- name: Recursively remove directory
+  ansible.builtin.file:
+    path: /opt/work/Catalina
+    state: absent  
 
 # - name: gathering work files to delete
 #   find:
