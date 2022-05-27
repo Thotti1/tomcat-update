@@ -65,8 +65,9 @@
 - name: Recursively remove directory
   ansible.builtin.file:
     path: /opt/work/Catalina
-    state: absent  
+    state: directory
     recurse: yes
+    state: absent  
 
 # - name: gathering work files to delete
 #   find:
